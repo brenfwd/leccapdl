@@ -32,6 +32,17 @@ class LeccapDownloader:
         self.fuzzy_course = fuzzy(course_name)
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--user-data-dir=chrome-data")
+
+        # --- PREVIOUS FIXES ---
+        chrome_options.add_argument("--log-level=3")
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+
+        # --- NEW STABILITY FIXES ---
+        # Forces a specific port, bypassing the file check that is failing
+        chrome_options.add_argument("--remote-debugging-port=9222")
+        # Helps prevent crashes in some environments
+        chrome_options.add_argument("--no-sandbox")
+
         self.driver = webdriver.Chrome(options=chrome_options)
 
         self.download_path = (
@@ -51,9 +62,7 @@ class LeccapDownloader:
     def goto_home(self) -> None:
         self.driver.get("https://leccap.engin.umich.edu/leccap/")
         sleep(1.0)
-        while not self.driver.current_url.startswith(
-            "https://leccap.engin.umich.edu"
-        ):
+        while not self.driver.current_url.startswith("https://leccap.engin.umich.edu"):
             sleep(1.0)
 
     def find_course_link(self) -> Optional[WebElement]:
@@ -70,9 +79,7 @@ class LeccapDownloader:
             )
 
             matches = [
-                link
-                for link in links
-                if fuzzy(link.text).startswith(course_name)
+                link for link in links if fuzzy(link.text).startswith(course_name)
             ]
             if not matches:
                 prev_year_link = self.driver.find_element(
