@@ -15,6 +15,7 @@ LeccapDL is a Python utility to enable students to download lecture recordings f
    - [Setup](#setup)
    - [Running](#running)
 - [FAQ](#faq)
+- [Architecture](#architecture)
 - [License](#license) 
 
 </td></table>
@@ -58,6 +59,73 @@ A Selenium-controlled browser window will appear. You will need to log into your
    - Yes, your cookies and other data will be stored in the `./chrome-data/` directory for subsequent runs. If you are done with the program for a while, consider deleting this directory when you are done, so that your credentials aren't stored for longer than needed.
 - Is this allowed?
    - Downloading videos for a course you are/were enrolled in, and using those video files solely for your own personal use, should be completely fine. However, understand that by using this program you are doing so at your own risk. If you are considering distributing the files downloaded by this program, please do further research and ask for permission from the appropriate rights holders for the content as needed.
+
+## Architecture
+
+```mermaid
+graph TD
+
+    classDef person fill:#08427b,stroke:#333,stroke-width:2px,color:white;
+    classDef script fill:#1f7a1f,stroke:#333,stroke-width:2px,color:white;
+    classDef browser fill:#f5a623,stroke:#333,stroke-width:2px,color:white;
+    classDef remote fill:#a6a6a6,stroke:#333,stroke-width:2px,color:black;
+    classDef storage fill:#5c5c5c,stroke:#333,stroke-width:2px,color:white;
+
+
+    User((User)):::person
+    
+    subgraph Local_Environment [Local Machine]
+        direction TB
+        
+        subgraph Python_Process [Python Runtime]
+            Controller[main.py / Controller]:::script
+            ReqLib[Requests Library]:::script
+        end
+        
+        subgraph Browser_Automation [Browser Automation]
+            Driver[Selenium WebDriver]:::browser
+            Chrome[Chrome Instance]:::browser
+        end
+        
+        Disk[(Local File System)]:::storage
+    end
+
+
+    subgraph Remote_Environment [University System]
+        Auth[SSO / Auth Service]:::remote
+        API[Leccap API]:::remote
+        CDN[Media Server]:::remote
+    end
+
+
+    User -- "1. Provides Course Name" --> Controller
+    User -- "3. Enters Credentials" --> Chrome
+
+    Controller -- "2. Launches & Instructs" --> Driver
+    Driver -- "Controls" --> Chrome
+
+    Chrome -- "4. Authenticates" --> Auth
+    Auth -. "Session Cookies" .-> Chrome
+    
+    Controller -- "5. Injects JS to Fetch Metadata" --> Driver
+    Driver -- "Executes JS" --> Chrome
+    Chrome -- "Fetches JSON" --> API
+    
+    API -- "JSON Metadata" --> Controller
+    Controller -- "6. Downloads Video/Subs" --> ReqLib
+    ReqLib -- "GET .mp4/.vtt" --> CDN
+    
+    ReqLib -- "Writes Files" --> Disk
+    Chrome -- "Persists User Data" --> Disk
+
+
+    subgraph Legend
+        L1(Person):::person
+        L2(Python Logic):::script
+        L3(Browser/Selenium):::browser
+        L4(Remote Server):::remote
+    end
+```
 
 ## License
 
