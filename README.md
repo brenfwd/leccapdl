@@ -44,6 +44,8 @@ LeccapDL is a Python utility to enable students to download lecture recordings f
 
 A Selenium-controlled browser window will appear. You will need to log into your University of Michigan account in order to access the lecture capture site.
 
+![Running Instructions](https://github.com/user-attachments/assets/f2755726-d729-4775-ab7e-ac8192dcd1e8)
+
 ### FAQ
 
 - Can I trust this with my login info?
@@ -56,8 +58,6 @@ A Selenium-controlled browser window will appear. You will need to log into your
    - Yes, your cookies and other data will be stored in the `./chrome-data/` directory for subsequent runs. If you are done with the program for a while, consider deleting this directory when you are done, so that your credentials aren't stored for longer than needed.
 - Is this allowed?
    - Downloading videos for a course you are/were enrolled in, and using those video files solely for your own personal use, should be completely fine. However, understand that by using this program you are doing so at your own risk. If you are considering distributing the files downloaded by this program, please do further research and ask for permission from the appropriate rights holders for the content as needed.
-
-![Running Instructions](https://github.com/user-attachments/assets/f2755726-d729-4775-ab7e-ac8192dcd1e8)
 
 ## License
 
