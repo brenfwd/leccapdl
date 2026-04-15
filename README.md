@@ -34,7 +34,7 @@ LeccapDL is a Python utility to enable students to download lecture recordings f
 1. Run `python3 -m venv env`
 1. Activate the environment
    1. On Linux/Mac: `source env/bin/activate`
-   1. On Windows: idk, use WSL
+   1. On Windows: use Windows Subsystem for Linux (WSL) and follow the Linux instructions.
 1. Install dependencies with `pip install -r requirements.txt`
 
 ![Setup Instructions](https://github.com/user-attachments/assets/b8c193b6-61d9-4c94-9953-460e046f3a78)
@@ -61,6 +61,8 @@ A Selenium-controlled browser window will appear. You will need to log into your
    - Downloading videos for a course you are/were enrolled in, and using those video files solely for your own personal use, should be completely fine. However, understand that by using this program you are doing so at your own risk. If you are considering distributing the files downloaded by this program, please do further research and ask for permission from the appropriate rights holders for the content as needed.
 
 ## Architecture
+
+The project consists of a Python process controlling an automated browser window using Selenium, which interacts with the university login system and the lecture capture site itself. The Python process then writes the saved files to disk and displays progress to the user. The diagram below details the interactions in-depth.
 
 ```mermaid
 graph TD
