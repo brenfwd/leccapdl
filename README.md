@@ -129,6 +129,43 @@ graph TD
     end
 ```
 
+## High-Level System Architecture
+```mermaid
+graph TD
+    %% High-Level System Context Diagram for LeccapDL
+    classDef externalSystem fill:#8B0000,stroke:#333,stroke-width:2px,color:white;
+    classDef localSystem fill:#005A9C,stroke:#333,stroke-width:2px,color:white;
+    classDef userNode fill:#2E8B57,stroke:#333,stroke-width:2px,color:white;
+    classDef storage fill:#5c5c5c,stroke:#333,stroke-width:2px,color:white;
+
+    User(("Student User")):::userNode
+
+    subgraph Local_Environment ["Student's Local Machine"]
+        LeccapDL["LeccapDL Utility\n(Python App)"]:::localSystem
+        LocalDisk[("Local Storage\n(Course Directory)")]:::storage
+    end
+
+    subgraph UMich_Infrastructure ["University of Michigan Infrastructure"]
+        Weblogin["UMich Weblogin\n(SSO Authentication)"]:::externalSystem
+        CAEN["CAEN Lecture Recording\n(Media & Metadata APIs)"]:::externalSystem
+    end
+
+    User -- "1. Initiates download & enters credentials via prompt" --> LeccapDL
+    LeccapDL -- "2. Automates SSO login flow" --> Weblogin
+    Weblogin -. "3. Returns secure session cookies" .-> LeccapDL
+    LeccapDL -- "4. Requests course metadata, videos, & subtitles" --> CAEN
+    CAEN -. "5. Delivers media files" .-> LeccapDL
+    LeccapDL -- "6. Saves structured media files and caches session data" --> LocalDisk
+
+    %% Legend
+    subgraph Legend
+        L1(("User")):::userNode
+        L2["Local Application"]:::localSystem
+        L3["External UMich System"]:::externalSystem
+    end
+```
+
+
 ## License
 
 Licensed under the GNU Affero General Public License, version 3.0. See [LICENSE](./LICENSE).
